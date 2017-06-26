@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login Registration</title>
+</head>
+
+<body>
+  <h1>Welcome</h1>
+  <h2>Register</h2>
+
+  <form class="" action="/create" method="post">
+    {% csrf_token %}
+    <span class="label">First Name:</span>
+    <input type="text" name="fname" value="">
+
+    <span class="label">Last Name:</span>
+    <input type="text" name="lname" value="">
+
+    <span class="label">email:</span>
+    <input type="email" name="email" value="">
+
+    <span class="label">Password:</span>
+    <input type="password" name="password" value="">
+
+    <span class="label">comfirm Password:</span>
+    <input type="password" name="cpassword" value="">
+
+    <span class="label">Date of Birth: </span>
+    <input type="date" name="dob" value="">
+
+    <input type="submit" name="" value="Submit">
+
+  </form>
+  <div class="">
+
+
+    <h1>Login</h1>
+    <form class="" action="/login" method="post">
+      {% csrf_token %}
+
+      <span class="label">email:</span>
+      <input type="text" name="email" value="">
+
+      <span class="label">Password:</span>
+      <input type="password" name="password" value="">
+
+      <input type="submit" name="" value="log In">
+
+    </form>
+  </div>
+
+</body>
+
+</html>
