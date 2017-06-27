@@ -3,6 +3,28 @@ from __future__ import unicode_literals
 import bcrypt
 from django.shortcuts import render, redirect, HttpResponse, reverse
 from .models import User
+from django.contrib import messages
+
+#
+#
+#
+#  flash messages area
+#
+#
+#
+
+
+def success_flash(request, errors):
+    messages.success(request, "Sucessful Registation")
+
+
+def error_flash(request, errors):
+    for error in errors:
+        messages.error(request, error)
+
+
+def login_flash(request, errors):
+    messages.error(request, "User is not in the Database")
 
 #
 #
@@ -14,27 +36,25 @@ from .models import User
 
 
 def index(request):
-    print 'Inside the the index method'  # print inside the terminal to check anything happening here
+    # print inside the terminal to check anything happening here
+    print 'Inside the the index method'
     return render(request, 'exam/index.html')
 
 
 def create(request):
     print 'Inside the the CREATE method'
     if request.method == "POST":
-        print ('*' * 50)
-        print request.POST
-        print ('*' * 50)
         form_data = request.POST
         check = User.objects.validate(form_data)
 
-        if check:
-            print check
+        if check != []:
+            error_flash(request, check)
             return redirect('/')
-
+        # valid form data
         password = str(form_data['password'])  # convert password to string
-        hashed_pw = bcrypt.hashpw(password, bcrypt.gensalt())  # hash the password
+        hashed_pw = bcrypt.hashpw(
+            password, bcrypt.gensalt())  # hash the password
 
-        # INSERT into database
         user = User.objects.create(
             fname=form_data['fname'],
             lname=form_data['lname'],
@@ -45,9 +65,15 @@ def create(request):
         )  # saving feilds to the database including hashed password.
 
         request.session['user_id'] = user.id
-        return redirect('/resuc')
+        success_flash(request, check)
+        return redirect('/')
 
-    return redirect('/')
+#
+#
+# Sucessful login page
+#
+#
+#
 
 
 def login(request):
@@ -56,19 +82,37 @@ def login(request):
     if request.method == "POST":
         form_data = request.POST
 
-        check = User.objects.login(form_data)  # sends to User to check validity
+        check = User.objects.validate_login(form_data)  # calls vaidate method
 
-        if type(check) == type(User()):
+        if check:
+            print check
+            # login_flash(request, check)
+            return redirect('/')
 
+            Users.objects.login(form_data)
             return redirect('/success')
-
-        print check
 
     return redirect('/')
 
 
-def regsuc(request):
-    return render(request, 'exam/regsuc.html')
+def success(request):
+    print 'inside the success method'
+    if 'user_id' in request.session:
+        user_id = request.session['user_id']
+
+        context = {
+            'user': User.objects.get(id=user_id)
+        }
+
+        return render(request, 'exam/success.html', context)
+
+    return redirect('/')  # send you back to the index page
+#
+#
+# Sucessful logout page
+#
+#
+#
 
 
 def logout(request):
@@ -88,15 +132,11 @@ def logout(request):
 #
 
 
-def success(request):
-    return render(request, 'exam/success.html')
-
-
-def result(arg):
+def result(request):
     pass
 
 
-def users(arg):
+def users(request):
     pass
 
 

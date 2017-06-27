@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.shortcuts import render, redirect, HttpResponse, reverse
 from django.db import models
+from .models import *
 import bcrypt
 #
 #
@@ -61,6 +62,7 @@ class Usermanager(models.Manager):
 #
 
     def validate_login(self, form_data):
+
         errors = []  # define error array
 
         if len(form_data['email']) == 0:
@@ -72,6 +74,7 @@ class Usermanager(models.Manager):
         return errors
 
     def login(self, form_data):
+        print 'inside login model'
         errors = self.validate_login(form_data)
 
         if not errors:
@@ -83,9 +86,6 @@ class Usermanager(models.Manager):
                 user_password = str(user.password)
                 # hash the password with bcrypt
                 hashed_pw = bcrypt.hashpw(password, user_password)
-
-                print user.password
-                print hashed_pw
 
                 if hashed_pw == user_password:  # compare hashed password with user entered password
                     return user
