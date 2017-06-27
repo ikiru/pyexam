@@ -89,8 +89,8 @@ def login(request):
             # login_flash(request, check)
             return redirect('/')
 
-            Users.objects.login(form_data)
-            return redirect('/success')
+        User.objects.login(form_data)
+        return redirect('/success')
 
     return redirect('/')
 
@@ -133,10 +133,6 @@ def logout(request):
 
 
 def result(request):
-    pass
-
-
-def users(request):
     pass
 
 

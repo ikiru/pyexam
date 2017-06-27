@@ -86,7 +86,8 @@ class Usermanager(models.Manager):
                 user_password = str(user.password)
                 # hash the password with bcrypt
                 hashed_pw = bcrypt.hashpw(password, user_password)
-
+                print user_password
+                print hashed_pw
                 if hashed_pw == user_password:  # compare hashed password with user entered password
                     return user
 
