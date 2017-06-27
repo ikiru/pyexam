@@ -1,11 +1,19 @@
 
 from __future__ import unicode_literals
-
+from django.shortcuts import render, redirect, HttpResponse, reverse
 from django.db import models
 import bcrypt
-# Create your models here.
-
-############## Validation of the Registation #######################
+#
+#
+#
+#
+#
+#Validation of the Registation
+#
+#
+#
+#
+#
 
 class Usermanager(models.Manager):
     def validate(self,form_data):
@@ -36,7 +44,18 @@ class Usermanager(models.Manager):
 
 
 
-############## Validation of the login  #######################
+#
+#
+#
+#
+#
+# Validation of the login
+#
+#
+#
+#
+#
+#
 
     def validate_login(self, form_data):
         errors=[] #define error array
@@ -57,9 +76,14 @@ class Usermanager(models.Manager):
 
             if user:
                 password = str(form_data['password']) #turn password in to string
-                hashed_pw = bcrypt.hashpw(password, user.password) #hash the password with bcrypt
-                if hashed_pw == user.password: #compare hashed password with user entered password
-                    return user #retrun the user
+                user_password = str(user.password)
+                hashed_pw = bcrypt.hashpw(password, user_password) #hash the password with bcrypt
+
+                print user.password
+                print hashed_pw
+
+                if hashed_pw == user_password: #compare hashed password with user entered password
+                    return user
 
             errors.append('Invalid Account Information') #append any errors to array
 
@@ -69,12 +93,13 @@ class Usermanager(models.Manager):
 
 class User(models.Model):
 
-    fname = models.CharField(max_length=255) #create fname feild as a string type feild
-    lname= models.CharField(max_length=255) #create lname feild as a string type feild
-    email= models.CharField(max_length=255) #create email feild as a string type feild
-    password=models.CharField(max_length=255) #create password feild as an encrypted feild
-    created_at = models.DateTimeField(auto_now_add=True) #create created_at feild as a one time Date type feild
-    updated_at = models.DateTimeField(auto_now=True) #create updated_at feild as a updated on change Date type feild
+    fname = models.CharField(max_length=255) #create fname field as a string type field
+    lname = models.CharField(max_length=255) #create lname field as a string type field
+    email = models.CharField(max_length=255) #create email field as a string type field
+    password = models.CharField(max_length=255) #create password field as an encrypted field
+    dob = models.DateField()# creates DateField
+    created_at = models.DateTimeField(auto_now_add=True) #create created_at field as a one time Date type field
+    updated_at = models.DateTimeField(auto_now=True) #create updated_at field as a updated on change Date type field
 
 #built in string method
     def __str__(self):
@@ -88,6 +113,7 @@ class User(models.Model):
     )
 
     objects = Usermanager()
+
 #
 #
 #
@@ -100,9 +126,9 @@ class User(models.Model):
 
 class Book(models.Model): #create Book model
 
-    title = models.CharField(max_length=255) #create title feild as a string type feild
-    created_at = models.DateTimeField(auto_now_add=True) #create created_at feild as a one time Date type feild
-    updated_at = models.DateTimeField(auto_now=True) #create updated_at feild as a updated on change Date type feild
+    title = models.CharField(max_length=255) #create title field as a string type field
+    created_at = models.DateTimeField(auto_now_add=True) #create created_at field as a one time Date type field
+    updated_at = models.DateTimeField(auto_now=True) #create updated_at field as a updated on change Date type field
 
 
 class Bookmanager(models.Manager):

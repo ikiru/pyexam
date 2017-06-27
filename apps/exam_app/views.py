@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import bcrypt
 from django.shortcuts import render, redirect, HttpResponse, reverse
-# from .models import Users
+from .models import User
 
 #
 #
@@ -32,35 +32,41 @@ def create(request):
         password = str(form_data['password']) #convert password to string
         hashed_pw = bcrypt.hashpw(password,bcrypt.gensalt()) #hash the password
 
-    # INSERT into database
+
+        # INSERT into database
         user = User.objects.create(
             fname = form_data['fname'],
             lname = form_data['lname'],
             email = form_data['email'],
-            password =  hashed_pw
-        )#saving feilds to the database including hashed password.
+            dob = form_data['dob'],
+            password = hashed_pw
+
+            )#saving feilds to the database including hashed password.
 
         request.session['user_id'] = user.id
-        return redirect('/success')
+        return redirect('/')
 
     return redirect ('/')
 
+def login(request):
+    print "Inside the login method."
 
-def books(request):
+    if request.method == "POST":
+        form_data = request.POST
 
-    if 'user_id' in request.session:
-        user_id = request.session['user_id']
+        check = User.objects.login(form_data) #sends to User to check validity
 
-        context = {
-            'user': User.objects.get(id=user_id)
-        }
+        if type(check) == type(User()):
 
-        return render(request,'exam/success.html',context)
+            return redirect('/success')
 
-    return redirect('/books')  #send you back to the index page
+        print check
+
+    return redirect('/')
+
 
 def logout(request):
-    request.session.pop(user) #pop the value in the session variable
+    request.session.pop('user_id') #pop the value in the session variable
 
     return redirect('/') #send you back to the index page
 
@@ -74,11 +80,24 @@ def logout(request):
 #
 #
 
-def success(arg):
-    pass
+def success(request):
+    return render(request,'exam/success.html')
 
 def result(arg):
     pass
 
 def users(arg):
     pass
+
+def books(request):
+
+    if 'user_id' in request.session:
+        user_id = request.session['user_id']
+
+        context = {
+            'user': User.objects.get(id=user_id)
+        }
+
+        return render(request,'exam/success.html',context)
+
+    return redirect('/books')  #send you back to the index page
