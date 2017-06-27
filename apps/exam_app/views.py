@@ -45,7 +45,7 @@ def create(request):
         )  # saving feilds to the database including hashed password.
 
         request.session['user_id'] = user.id
-        return redirect('/')
+        return redirect('/resuc')
 
     return redirect('/')
 
@@ -67,10 +67,15 @@ def login(request):
     return redirect('/')
 
 
+def regsuc(request):
+    return render(request, 'exam/regsuc.html')
+
+
 def logout(request):
     request.session.pop('user_id')  # pop the value in the session variable
 
     return redirect('/')  # send you back to the index page
+
 
 #
 #
@@ -95,15 +100,15 @@ def users(arg):
     pass
 
 
-def books(request):
-
-    if 'user_id' in request.session:
-        user_id = request.session['user_id']
-
-        context = {
-            'user': User.objects.get(id=user_id)
-        }
-
-        return render(request, 'exam/success.html', context)
-
-    return redirect('/books')  # send you back to the index page
+# def books(request):
+#
+#     if 'user_id' in request.session:
+#         user_id = request.session['user_id']
+#
+#         context = {
+#             'user': User.objects.get(id=user_id)
+#         }
+#
+#         return render(request, 'exam/success.html', context)
+#
+#     return redirect('/books')  # send you back to the index page
