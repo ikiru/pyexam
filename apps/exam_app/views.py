@@ -12,16 +12,18 @@ from .models import User
 #
 #
 
+
 def index(request):
-    print 'Inside the the index method' #print inside the terminal to check anything happening here
-    return render(request,'exam/index.html')
+    print 'Inside the the index method'  # print inside the terminal to check anything happening here
+    return render(request, 'exam/index.html')
+
 
 def create(request):
     print 'Inside the the CREATE method'
     if request.method == "POST":
-        print ('*'*50)
+        print ('*' * 50)
         print request.POST
-        print ('*'*50)
+        print ('*' * 50)
         form_data = request.POST
         check = User.objects.validate(form_data)
 
@@ -29,24 +31,24 @@ def create(request):
             print check
             return redirect('/')
 
-        password = str(form_data['password']) #convert password to string
-        hashed_pw = bcrypt.hashpw(password,bcrypt.gensalt()) #hash the password
-
+        password = str(form_data['password'])  # convert password to string
+        hashed_pw = bcrypt.hashpw(password, bcrypt.gensalt())  # hash the password
 
         # INSERT into database
         user = User.objects.create(
-            fname = form_data['fname'],
-            lname = form_data['lname'],
-            email = form_data['email'],
-            dob = form_data['dob'],
-            password = hashed_pw
+            fname=form_data['fname'],
+            lname=form_data['lname'],
+            email=form_data['email'],
+            dob=form_data['dob'],
+            password=hashed_pw
 
-            )#saving feilds to the database including hashed password.
+        )  # saving feilds to the database including hashed password.
 
         request.session['user_id'] = user.id
         return redirect('/')
 
-    return redirect ('/')
+    return redirect('/')
+
 
 def login(request):
     print "Inside the login method."
@@ -54,7 +56,7 @@ def login(request):
     if request.method == "POST":
         form_data = request.POST
 
-        check = User.objects.login(form_data) #sends to User to check validity
+        check = User.objects.login(form_data)  # sends to User to check validity
 
         if type(check) == type(User()):
 
@@ -66,9 +68,9 @@ def login(request):
 
 
 def logout(request):
-    request.session.pop('user_id') #pop the value in the session variable
+    request.session.pop('user_id')  # pop the value in the session variable
 
-    return redirect('/') #send you back to the index page
+    return redirect('/')  # send you back to the index page
 
 #
 #
@@ -80,14 +82,18 @@ def logout(request):
 #
 #
 
+
 def success(request):
-    return render(request,'exam/success.html')
+    return render(request, 'exam/success.html')
+
 
 def result(arg):
     pass
 
+
 def users(arg):
     pass
+
 
 def books(request):
 
@@ -98,6 +104,6 @@ def books(request):
             'user': User.objects.get(id=user_id)
         }
 
-        return render(request,'exam/success.html',context)
+        return render(request, 'exam/success.html', context)
 
-    return redirect('/books')  #send you back to the index page
+    return redirect('/books')  # send you back to the index page
