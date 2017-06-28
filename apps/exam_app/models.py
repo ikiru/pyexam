@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, redirect, HttpResponse, reverse
 from django.db import models
 from .models import *
+from django.core.urlresolvers import reverse
 import bcrypt
 #
 #
@@ -112,6 +113,9 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     # create updated_at field as a updated on change Date type field
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(arg):
+        return reverse("detail", kwarg={"id": self.id})
 
 # built in string method
     def __str__(self):

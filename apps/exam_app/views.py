@@ -130,11 +130,28 @@ def logout(request):
 #
 #
 #
+def result(request):  # add id
+    ######## multiple file ###########
+    # queryset = Post.objects.all()
+    # context = {
+    #     'object_list' = queryset, blank in blanks
+    #     'title': 'list'
+    # }
+
+    ######## single file ###########
+    # instance = get_object_or_404(table. id=id)
+    # context = {
+    #     'object_list' = queryset, blank in blanks
+    #     'title': 'list'
+    # }
+    # on html page instance.title
+
+    return render(request, 'exam/result.html', context)
 
 
-def result(request):
-    pass
+def add(request):
 
+    return render(request, 'exam/add.html')
 
 # def books(request):
 #
