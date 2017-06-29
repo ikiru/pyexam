@@ -10,11 +10,26 @@
 
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
-  <title>Result</title>
+  <title>Destination</title>
 </head>
-
 <body>
-  <h1>This is the results page</h1>
+  <a href="/dash">Home</a>
+  <a href="/logout">Logout</a>
+
+  <div class="container">
+  <h2>{{instance.destination}}</h2>
+  <p>{{ instance.name}}</p>
+  <p>{{ instance.start_d}}</p>
+  <p>{{ instance.end_d}}</p>
+  </div>
+
+  <div class="container">
+    <h2>Other user's joining the Trip</h2>
+    {% for user in users %}
+    <p></p>
+    {% user in users %}
+  </div>
+
 </body>
 
 </html>

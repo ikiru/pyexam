@@ -6,15 +6,7 @@ from django.core.urlresolvers import reverse
 import bcrypt
 
 #
-#
-#
-#
-#
-# Validation of the Registation
-#
-#
-#
-#
+#  USER and validate function
 #
 
 
@@ -34,7 +26,7 @@ class Usermanager(models.Manager):
         if len(form_data['email']) == 0:
             errors.append("email required.")  # check if email is blank
 
-        if len(form_data['password']) == 00 and len(form_data['password']) > 3:
+        if len(form_data['password']) == 0 and len(form_data['password']) > 3:
             # check if password is blank
             errors.append(
                 "Password is required and must be at least 3 characters.")
@@ -47,19 +39,8 @@ class Usermanager(models.Manager):
             # check if password and confirm password match
             errors.append("Passwords much match")
 
-        return errors  # send error messages to the form page
-#
-#
-#
-#
-#
-# Validation of the login
-#
-#
-#
-#
-#
-#
+        return errors  # send error messages to the  page
+    # this level comment
 
     def validate_login(self, form_data):
 
@@ -71,7 +52,7 @@ class Usermanager(models.Manager):
         if len(form_data['password']) == 0:
             errors.append("Password is required.")  # check if pasword is blank
 
-        return errors
+        return errors  # send error messages to the  page
 
     def login(self, form_data):
         print 'inside login model'
@@ -95,15 +76,6 @@ class Usermanager(models.Manager):
             errors.append('Invalid Account Information')
 
         return errors  # return errors to views
-#
-#
-#
-#
-# USER model and validation
-#
-#
-#
-#
 
 
 class User(models.Model):
@@ -126,7 +98,7 @@ class User(models.Model):
 # show whats is going on in the console
     def __str__(self):
         string_output = "id:{} name:{} username:{} email{} password{}"
-        return string.output.format(
+        return string_output.format(
             self.id,
             self.name,
             self.username,
@@ -136,119 +108,44 @@ class User(models.Model):
 
     objects = Usermanager()
 
-#
-#
-#
-#
-# TRIP model and validation
-#
-#
-#
-#
+    #
+    #  ADD  and validate function
+    #
 
 
-class Trip(models.Model):
-    destination = models.CharField(max_length=255)
-    users = models.ManyToManyField(User,  related_name="trip")
-    start_d = models.DateField('%d %b %Y')
-    end_d = models.DateField('%d %b %Y')
-    created_at = models.DateTimeField(auto_now_add=True)
-    # create updated_at field as a updated on change Date type field
-    updated_at = models.DateTimeField(auto_now=True)
+class ADDmanager(models.Manager):
+    def validate(self, form_data):
+        errors = []  # arrary where we will store the error messages
 
-    def __str__(self):
-        string_output = "id:{} destination:{} description:{} start_d{} end_d{}"
-        return string.output.format(
-            self.id,
-            self.destination,
-            self.description,
-            self.start_d,
-            self.end_d
-        )
+        if len(form_data['name']) == 0 and len(form_data['name']) > 3:
+            # check if name is blank
+            errors.append("Name is required and must be at least 3 characters")
 
-        objects = validate_trip()
+        return errors  # send error messages to the page
 
 
-class Join(models.Model):
-    joined = models.ForeignKey(User, related_name="joiner")
-    joiner = models.ForeignKey(User, related_name="joined")
-    created_at = models.DateTimeField(auto_now_add=True)
-    # create updated_at field as a updated on change Date type field
-    updated_at = models.DateTimeField(auto_now=True)
+# class Add(models.Model):
 
+    #
+    #  USER and validate function
+    #
 
-#
-#
-#
-#
-# trip model and validation
-#
-#
-#
-#
+    # def __str__(self):
+    #     string_output = "id:{} name:{} username:{} email{} password{}"
+    #     return string.output.format(
+    #         self.id,
+    #         self.name,
+    #         self.username,
+    #         self.email,
+    #         self.password
+    #     )
+# objects = Usermanager()
 
-def validate_trip(self, form_data):
-    errors = []
-    if len(form_data['destination']) == 0:
-        # check if email is blank
-        errors.append("A destination is is required.")
+    # user = models.ForeignKeyField(User related_name ="trip")
+    # users = models.ManyToManyField(User, related_name = ''trips")  Put in second table.
 
-    if len(form_data['description']) == 0:
-        # check if pasword is blank
-        errors.append("A description is is required.")
+    # self join
+    # joined = models.ForeignKeyField(User, related_name = "joinee")
+    # joinee = models.ForeignKeyField(User, related_name = joined)
 
-    if 'end_d' < 'start_d':
-        # check if pasword is blank
-        errors.append("End date cannot be before start date")
-
-    return errors
-
-
-# class Book(models.Model):  # create Book model
-#
-#     # create created_at field as a one time Date type field
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     # create updated_at field as a updated on change Date type field
-#     updated_at = models.DateTimeField(auto_now=True)
-
-
-# class Bookmanager(models.Manager):
-#     def book(self, form_data):
-#         errors = []  # define error array
-#
-#         if len(form_data['title']) == 0:
-#             errors.append("title required.")  # check if email is blank
-#
-#         if len(form_data['review']) == 0:
-#             errors.append("Password is required.")  # check if pasword is blank
-#
-#         return errors
-
-#
-#
-#
-#
-# Author model and validation
-#
-#
-#
-#
-
-
-# class Author(models.Model):
-#     name = models.TextField(max_length=255)
-#     # FK for Book One author can have many books
-#     book = models.ForeignKey(Book)
-
-
-# class Authormanager(models.Manager):
-#     def book(self, form_data):
-#         errors = []  # define error array
-#
-#         if len(form_data['title']) == 0:
-#             errors.append("title required.")  # check if email is blank
-#
-#         if len(form_data['rev']) == 0:
-#             errors.append("Password is required.")  # check if pasword is blank
-#
-#         return errors
+    # MTM calling id from the join table : creator = Trip.users.objects.get(user__id=1)

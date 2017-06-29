@@ -14,7 +14,7 @@ from django.contrib import messages
 #
 
 
-def success_flash(request, errors):
+def dash_flash(request, errors):
     messages.success(request, "Sucessful Registation")
 
 
@@ -56,16 +56,15 @@ def create(request):
             password, bcrypt.gensalt())  # hash the password
 
         user = User.objects.create(
-            fname=form_data['fname'],
-            lname=form_data['lname'],
+            name=form_data['name'],
+            username=form_data['username'],
             email=form_data['email'],
-            dob=form_data['dob'],
             password=hashed_pw
 
         )  # saving feilds to the database including hashed password.
 
         request.session['user_id'] = user.id
-        success_flash(request, check)
+        dash_flash(request, check)
         return redirect('/')
 
 #
@@ -90,23 +89,28 @@ def login(request):
             return redirect('/')
 
         User.objects.login(form_data)
-        return redirect('/success')
+        return redirect('/dash')
 
     return redirect('/')
 
 
-def success(request):
-    print 'inside the success method'
+def dash(request):
+    print 'inside the dash method'
     if 'user_id' in request.session:
         user_id = request.session['user_id']
+        queryset = Trip.objects.get()
 
         context = {
-            'user': User.objects.get(id=user_id)
+            'user': User.objects.get(id=user_id),
+            'trip': queryset,
+            "destination": "list",
         }
 
-        return render(request, 'exam/success.html', context)
+        return render(request, 'exam/dash.html', context)
 
     return redirect('/')  # send you back to the index page
+
+
 #
 #
 # Sucessful logout page
@@ -130,13 +134,26 @@ def logout(request):
 #
 #
 #
-def result(request):  # add id
+
+def trip(request):  # add id
     ######## multiple file ###########
-    # queryset = Post.objects.all()
-    # context = {
-    #     'object_list' = queryset, blank in blanks
-    #     'title': 'list'
-    # }
+    queryset = trip.objects.get(session.id)
+    context = {
+        'trip': queryset,
+        "destination": "list"
+    }
+
+    return render(request, 'exam/dash.html', context)
+
+
+def other(request,):
+    queryset = trip.objects.all().exclude(session.id)
+    context = {
+        'user': queryset,
+        "destination": "list"
+    }
+
+    return render(request, 'exam/dash.html', context)
 
     ######## single file ###########
     # instance = get_object_or_404(table. id=id)
@@ -146,22 +163,32 @@ def result(request):  # add id
     # }
     # on html page instance.title
 
-    return render(request, 'exam/result.html', context)
-
 
 def add(request):
 
     return render(request, 'exam/add.html')
 
-# def books(request):
-#
-#     if 'user_id' in request.session:
-#         user_id = request.session['user_id']
-#
-#         context = {
-#             'user': User.objects.get(id=user_id)
-#         }
-#
-#         return render(request, 'exam/success.html', context)
-#
-#     return redirect('/books')  # send you back to the index page
+
+def result(request):
+
+    return render(request, 'exam/result.html')
+
+
+def add_trip(request):
+    if request.method == "POST":
+        form_data = request.POST
+        check = Trip.validate_trip(form_data)
+
+        if check != []:
+            error_flash(request, check)
+            return redirect('/')
+
+        user = Trip.objects.create(
+            destination=form_data['destination'],
+            description=form_data['description'],
+            start_d=form_data['start_d'],
+            end_d=form_data['end_d'],
+            user=session.id
+        )  # saving feilds to the database
+
+    return render(request, 'exam/dash.html')

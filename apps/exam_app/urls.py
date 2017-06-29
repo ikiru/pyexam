@@ -6,7 +6,9 @@ urlpatterns = [
     url(r'^add$', views.add),
     url(r'^login$', views.login),
     url(r'^logout$', views.logout),
-    url(r'^result$', views.result),
-    url(r'^success$', views.success),
-
+    url(r'^(?P<id>\d+)/$', views.result),
+    url(r'^dash$', views.dash),
+    url(r'^add_trip$', views.add_trip),
 ]
+#(?<id>\d+)/$
+#{% url 'result id=object.id '%}
